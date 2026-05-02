@@ -41,7 +41,7 @@ export async function generateMetadata({
 export default async function Notes({ params }: NotesProps) {
   const queryClient = new QueryClient();
   const { slug } = await params;
-  const category = slug[0] === "all" ? undefined : (slug[0] as CategoryTag);
+  const category = slug[0] === "All" ? undefined : (slug[0] as CategoryTag);
 
   try {
     await queryClient.prefetchQuery({
