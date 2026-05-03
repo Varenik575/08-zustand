@@ -12,6 +12,8 @@ import SearchBox from "@/components/SearchBox/SearchBox";
 import { useDebouncedCallback } from "use-debounce";
 import { CategoryTag } from "@/types/note";
 
+import Link from "next/link";
+
 type NotesProps = {
   category?: CategoryTag;
 };
@@ -19,10 +21,6 @@ type NotesProps = {
 export default function NotesClient({ category }: NotesProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [query, setQuery] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   const { data, error } = useQuery({
     queryKey: ["notes", query, currentPage, category],
@@ -51,17 +49,11 @@ export default function NotesClient({ category }: NotesProps) {
               onPageChange={setCurrentPage}
             />
           )}
-          <button className={css.button} onClick={openModal}>
-            Create note +
-          </button>
+          <Link href="/notes/action/create">
+            <button className={css.button}>Create note +</button>
+          </Link>
         </header>
         {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
-        {isModalOpen && (
-          <Modal onClose={closeModal}>
-            {" "}
-            <NoteForm onClose={closeModal} />
-          </Modal>
-        )}
       </div>
     </>
   );
