@@ -43,7 +43,6 @@ export default function NoteForm() {
     const tag = formData.get("tag") as Note["tag"];
 
     mutationCreate.mutate({ title, content, tag });
-    router.back();
   };
 
   const handleCancel = () => router.back();

@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     description:
       "A simple and efficient application designed for managing personal notes. It helps keep your thoughts organized and accessible in one place, whether you are at home or on the go.",
     type: "article",
+    url: "https://08-zustand-nu-two.vercel.app/notes/action/create",
     images: [
       {
         url: "https://ac.goit.global/fullstack/react/og-meta.jpg",
