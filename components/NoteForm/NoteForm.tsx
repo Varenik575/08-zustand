@@ -4,6 +4,7 @@ import { useId } from "react";
 import type { Note } from "../../types/note";
 import { createNote } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 interface NoteFormValues {
   title: string;
@@ -13,6 +14,7 @@ interface NoteFormValues {
 
 export default function NoteForm() {
   const id = useId();
+  const router = useRouter();
 
   const queryClient = useQueryClient();
 
@@ -30,6 +32,7 @@ export default function NoteForm() {
     const tag = formData.get("tag") as Note["tag"];
 
     mutationCreate.mutate({ title, content, tag });
+    router.back();
   };
 
   return (
