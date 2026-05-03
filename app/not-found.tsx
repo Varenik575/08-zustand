@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: "Notehub App - Not Found",
     description: "Sorry, the page you are looking for doesn't exist.",
     type: "article",
+    url: "https://08-zustand-nu-two.vercel.app/not-found", // який тут треба вказати URL?
     images: [
       {
         url: "https://ac.goit.global/fullstack/react/og-meta.jpg",
