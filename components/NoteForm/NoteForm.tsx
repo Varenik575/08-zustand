@@ -5,6 +5,7 @@ import type { Note } from "../../types/note";
 import { createNote } from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useNoteDraftStore } from "@/lib/store/noteStore";
 
 interface NoteFormValues {
   title: string;
@@ -15,14 +16,24 @@ interface NoteFormValues {
 export default function NoteForm() {
   const id = useId();
   const router = useRouter();
-
   const queryClient = useQueryClient();
+  const { draft, setDraft, clearDraft } = useNoteDraftStore();
+
+  const handleChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    setDraft({ ...draft, [event.target.name]: event.target.value });
+  };
 
   const mutationCreate = useMutation({
     mutationFn: async (values: NoteFormValues) =>
       createNote(values.title, values.content, values.tag),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
+      clearDraft();
+      router.back();
     },
   });
 
@@ -35,6 +46,8 @@ export default function NoteForm() {
     router.back();
   };
 
+  const handleCancel = () => router.back();
+
   return (
     <form className={css.form} action={handleSubmit}>
       <div className={css.formGroup}>
@@ -44,6 +57,8 @@ export default function NoteForm() {
           type="text"
           name="title"
           className={css.input}
+          onChange={handleChange}
+          defaultValue={draft?.title}
         />
         {/* <span name="title" className={css.error} /> */}
       </div>
@@ -55,13 +70,21 @@ export default function NoteForm() {
           name="content"
           rows={8}
           className={css.textarea}
+          onChange={handleChange}
+          defaultValue={draft?.content}
         />
         {/* <span name="content" className={css.error} /> */}
       </div>
 
       <div className={css.formGroup}>
         <label htmlFor={`${id}-tag`}>Tag</label>
-        <select id={`${id}-tag`} name="tag" className={css.select}>
+        <select
+          id={`${id}-tag`}
+          name="tag"
+          className={css.select}
+          onChange={handleChange}
+          defaultValue={draft?.tag}
+        >
           <option value="Todo">Todo</option>
           <option value="Work">Work</option>
           <option value="Personal">Personal</option>
@@ -72,7 +95,11 @@ export default function NoteForm() {
       </div>
 
       <div className={css.actions}>
-        <button type="button" className={css.cancelButton}>
+        <button
+          type="button"
+          className={css.cancelButton}
+          onClick={handleCancel}
+        >
           Cancel
         </button>
         <button type="submit" className={css.submitButton} disabled={false}>
